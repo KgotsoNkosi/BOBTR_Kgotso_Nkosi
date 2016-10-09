@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block body %}
+	{% if session.logged_in %}
+		<form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+			<dl>
+				<dt>Embarked:
+				<dd><input type="text" size=30 name="Embarked">
+                <dt>Sex:
+                <dd><input type="text" size=30 name="Sex">
+                <dt>Surived:
+                <dd><input type="text" size=30 name="Surived">
+                <dt>Number_Siblings_and_spouses:
+                <dd><input type="text" size=30 name="Number_Siblings_and_spouses">
+                <dt>ID:
+                <dd><input type="text" size=30 name="ID">
+                <dt>Class:
+                <dd><input type="text" size=30 name="Class">
+                <dt>Cabin:
+                <dd><input type="text" size=30 name="Cabin">
+                <dt>Fare:
+                <dd><input type="text" size=30 name="Fare">
+                <dt>Name:
+                <dd><input type="text" size=30 name="Name">
+                <dt>Age:
+                <dd><input type="text" size=30 name="Age">
+                <dt>Number_Parents_and_children:
+                <dd><input type="text" size=30 name="Number_Parents_and_children">
+                <dt>Ticket_number:
+                <dd><input type="text" size=30 name="Ticket_number">
+                <dd><input type="submit" value="Share">
+            </dl>
+		</form>
+	{% endif %}
+	<ul class="entries">
+	{% for entry in entries %}
+		<li><h2>{{ entry.Embarked }}</h2>{{ entry.Sex }}<h2>{{ entry.Surived }}</h2>{{ entry.Number_Siblings_and_spouses }}<h2>{{ entry.ID }}</h2>{{ entry.Class }}<h2>{{ entry.Cabin }}</h2>{{ entry.Fare }}<h2>{{ entry.Name }}</h2>{{ entry.Age }}<h2>{{ entry.Number_Parents_and_children }}</h2>{{ entry.Ticket_number|safe }}</li>
+	{% else %}
+		<li><em>Unbelievable. No entries here so far</em></li>
+	{% endfor %}
+	</ul>
+{% endblock %}
