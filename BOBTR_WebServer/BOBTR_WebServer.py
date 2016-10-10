@@ -29,8 +29,6 @@ def init_db():
     db = get_db()
     with app.open_resource('schema.sql', mode='r') as f:
         db.cursor().executescript(f.read())
-    #db.commit()
-    #db = get_db()
     for row in data:
         embarked = row['Embarked']
         sex = row['sex']
@@ -52,13 +50,7 @@ def init_db():
         ticket_number = row['ticket_number']
         db.execute('insert into entries (Embarked, Sex, Survived, Number_of_siblings_and_spouses_aboard, Passenger_id, Class, Cabin, Fare, Name, Age, Number_of_parents_and_children_aboard, Ticket_number) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (embarked, sex, survived, siblings_and_spouses, passenger_id, class_, cabin, fare, name, age, parents_and_children, ticket_number))
     db.commit()
-    
-#def query_db(query, args=(), one = False):
-    #cur = g.db.execute(query, args)
-    #rv = [dict((cur.description[idx][0], value)
-               #for idx, value in enumerate(row)) for row in cur.fetchall()]
-    #return (rv[0] if rv else None) if one else rv
-    
+        
 @app.cli.command('initdb')
 def initdb_command():
     """Initializes the database."""
@@ -95,35 +87,30 @@ def add_entry():
     return redirect(url_for('show_entries'))
 @app.route('/sex_query', methods=['GET','POST'])
 def sex_query():
-    #query = query_db('select Sex, (count(Survived)*100/count(Sex)) as SurvivalRate from entries where Survived=1 group by Sex')
     db = get_db()
     cur = db.execute('select Sex, (count(Survived)*100/(select count(Sex) from entries)) as Survival_Rate_Percentage from entries where Survived=1 group by Sex')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)  
 @app.route('/age_query', methods=['GET','POST'])
 def age_query():
-    #query = query_db('select Age, (count(Survived)*100/count(Age)) as SurvivalRate from entries where Survived=1 group by Age')
     db = get_db()
     cur = db.execute('select Age, (count(Survived)*100/(select count(Age) from entries)) as Survival_Rate_Percentage from entries where Survived=1 group by Age')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 @app.route('/class_query', methods=['GET','POST'])
 def class_query():
-    #query = query_db('select Sex, (count(Survived)*100/count(Sex)) as SurvivalRate from entries where Survived=1 group by Sex')
     db = get_db()
     cur = db.execute('select Class, (count(Survived)*100/(select count(Class) from entries)) as Survival_Rate_Percentage from entries where Survived=1 group by Class')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 @app.route('/jack_query', methods=['GET','POST'])
 def jack_query():
-    #query = query_db('select Sex, (count(Survived)*100/count(Sex)) as SurvivalRate from entries where Survived=1 group by Sex')
     db = get_db()
     cur = db.execute('select Name, (count(Survived)*100/(select count(Name) from entries)) as Survival_Rate_Percentage from entries where Survived=1 and Name like ?', ['Jack'] )
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 @app.route('/rose_query', methods=['GET','POST'])
 def rose_query():
-    #query = query_db('select Sex, (count(Survived)*100/count(Sex)) as SurvivalRate from entries where Survived=1 group by Sex')
     db = get_db()
     cur = db.execute('select Name, (count(Survived)*100/(select count(Name) from entries)) as Survival_Rate_Percentage from entries where Survived=1 and Name like ?', ['Rose'])
     entries = cur.fetchall()
